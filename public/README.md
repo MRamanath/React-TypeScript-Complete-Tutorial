@@ -10,17 +10,17 @@
 
 ## 📚 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Installation](#installation)
-- [Running the Project](#running-the-project)
-- [Tutorial Structure](#tutorial-structure)
-- [Chapter Details](#chapter-details)
-- [Key Concepts Covered](#key-concepts-covered)
-- [Interview Preparation](#interview-preparation)
-- [Best Practices](#best-practices)
-- [TypeScript Integration](#typescript-integration)
-- [Additional Resources](#additional-resources)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Installation](#-installation)
+- [Running the Project](#-running-the-project)
+- [Tutorial Structure](#-tutorial-structure)
+- [Section Details](#-section-details)
+- [Key Concepts Covered](#-key-concepts-covered)
+- [Interview Preparation](#-interview-preparation)
+- [Best Practices](#-best-practices)
+- [TypeScript Integration](#-typescript-integration)
+- [Additional Resources](#-additional-resources)
 
 ---
 
