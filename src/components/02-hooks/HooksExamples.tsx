@@ -18,7 +18,7 @@ const UseStateExample: React.FC = () => {
   const [items, setItems] = useState<string[]>(['React', 'TypeScript'])
   
   // Lazy initialization - expensive computation only runs once
-  const [data, setData] = useState<number>(() => {
+  const [data, _setData] = useState<number>(() => {
     console.log('Expensive initialization')
     return Array.from({ length: 1000 }, (_, i) => i).reduce((a, b) => a + b, 0)
   })
@@ -500,7 +500,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 // Custom hook for fetch
-function useFetch<T>(url: string) {
+export function _useFetch<T>(url: string) {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
