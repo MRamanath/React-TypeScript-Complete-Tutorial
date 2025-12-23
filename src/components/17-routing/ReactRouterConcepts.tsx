@@ -30,6 +30,15 @@ export default function ReactRouterConcepts() {
         <button onClick={() => setActiveDemo('protection')} className={activeDemo === 'protection' ? 'active' : ''}>
           Route Protection
         </button>
+        <button onClick={() => setActiveDemo('live-basic')} className={activeDemo === 'live-basic' ? 'active' : ''}>
+          Live: Basic Router
+        </button>
+        <button onClick={() => setActiveDemo('live-nested')} className={activeDemo === 'live-nested' ? 'active' : ''}>
+          Live: Nested Routes
+        </button>
+        <button onClick={() => setActiveDemo('live-protected')} className={activeDemo === 'live-protected' ? 'active' : ''}>
+          Live: Protected Routes
+        </button>
         <button onClick={() => setActiveDemo('interview')} className={activeDemo === 'interview' ? 'active' : ''}>
           Interview Q&A
         </button>
@@ -42,6 +51,9 @@ export default function ReactRouterConcepts() {
       {activeDemo === 'navigation' && <NavigationSection />}
       {activeDemo === 'hooks' && <RouterHooksSection />}
       {activeDemo === 'protection' && <RouteProtectionSection />}
+      {activeDemo === 'live-basic' && <LiveBasicRouterDemo />}
+      {activeDemo === 'live-nested' && <LiveNestedRoutesDemo />}
+      {activeDemo === 'live-protected' && <LiveProtectedRoutesDemo />}
       {activeDemo === 'interview' && <InterviewQASection />}
     </div>
   )
@@ -1142,6 +1154,782 @@ function App() {
           <li>path="*" for 404 pages</li>
         </ul>
       </div>
+    </div>
+  )
+}
+
+// ============================================
+// LIVE DEMO 1: Basic Router with Navigation
+// ============================================
+
+import { MemoryRouter, Routes, Route, Link, useLocation, useParams, useNavigate } from 'react-router-dom'
+
+function LiveBasicRouterDemo() {
+  return (
+    <div className="section">
+      <h3>Live Demo: Basic Router & Navigation</h3>
+      <p>A working router example with multiple routes and navigation.</p>
+      
+      <div className="demo-box" style={{ padding: '1rem', border: '2px solid #646cff' }}>
+        <MemoryRouter initialEntries={['/']}>
+          <BasicRouterApp />
+        </MemoryRouter>
+      </div>
+
+      <div className="code-block" style={{ marginTop: '1rem' }}>
+        <h4>Code:</h4>
+        <pre>{`import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+
+function App() {
+  return (
+    <BrowserRouter>
+      <nav>
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+        <Link to="/contact">Contact</Link>
+      </nav>
+      
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}`}</pre>
+      </div>
+    </div>
+  )
+}
+
+function BasicRouterApp() {
+  const location = useLocation()
+  
+  return (
+    <div>
+      <nav style={{ 
+        padding: '1rem', 
+        background: '#f5f5f5', 
+        borderRadius: '4px',
+        marginBottom: '1rem',
+        display: 'flex',
+        gap: '1rem',
+        color: '#333'
+      }}>
+        <Link to="/" style={{ 
+          padding: '0.5rem 1rem',
+          background: location.pathname === '/' ? '#646cff' : '#fff',
+          color: location.pathname === '/' ? '#fff' : '#646cff',
+          textDecoration: 'none',
+          borderRadius: '4px',
+          border: '1px solid #646cff'
+        }}>
+          Home
+        </Link>
+        <Link to="/about" style={{ 
+          padding: '0.5rem 1rem',
+          background: location.pathname === '/about' ? '#646cff' : '#fff',
+          color: location.pathname === '/about' ? '#fff' : '#646cff',
+          textDecoration: 'none',
+          borderRadius: '4px',
+          border: '1px solid #646cff'
+        }}>
+          About
+        </Link>
+        <Link to="/contact" style={{ 
+          padding: '0.5rem 1rem',
+          background: location.pathname === '/contact' ? '#646cff' : '#fff',
+          color: location.pathname === '/contact' ? '#fff' : '#646cff',
+          textDecoration: 'none',
+          borderRadius: '4px',
+          border: '1px solid #646cff'
+        }}>
+          Contact
+        </Link>
+        <Link to="/users/42" style={{ 
+          padding: '0.5rem 1rem',
+          background: location.pathname.startsWith('/users') ? '#646cff' : '#fff',
+          color: location.pathname.startsWith('/users') ? '#fff' : '#646cff',
+          textDecoration: 'none',
+          borderRadius: '4px',
+          border: '1px solid #646cff'
+        }}>
+          User Profile
+        </Link>
+      </nav>
+
+      <div style={{ padding: '1rem', background: '#1a1a1a', borderRadius: '4px', minHeight: '150px' }}>
+        <div style={{ marginBottom: '0.5rem', color: '#888', fontSize: '0.9rem' }}>
+          Current Path: <code style={{ color: '#646cff' }}>{location.pathname}</code>
+        </div>
+        
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/users/:userId" element={<UserProfilePage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
+    </div>
+  )
+}
+
+function HomePage() {
+  return (
+    <div>
+      <h3>🏠 Home Page</h3>
+      <p>Welcome to the home page! Click the navigation links above to explore.</p>
+    </div>
+  )
+}
+
+function AboutPage() {
+  return (
+    <div>
+      <h3>ℹ️ About Page</h3>
+      <p>This is the about page with information about our app.</p>
+    </div>
+  )
+}
+
+function ContactPage() {
+  const navigate = useNavigate()
+  
+  return (
+    <div>
+      <h3>📧 Contact Page</h3>
+      <p>Get in touch with us!</p>
+      <button 
+        onClick={() => navigate('/')}
+        style={{ marginTop: '0.5rem' }}
+      >
+        Go Home (Programmatic Navigation)
+      </button>
+    </div>
+  )
+}
+
+function UserProfilePage() {
+  const { userId } = useParams()
+  const navigate = useNavigate()
+  
+  return (
+    <div>
+      <h3>👤 User Profile</h3>
+      <p>Viewing profile for user ID: <strong>{userId}</strong></p>
+      <p>This is a dynamic route using URL parameters!</p>
+      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+        <button onClick={() => navigate('/users/1')}>User 1</button>
+        <button onClick={() => navigate('/users/2')}>User 2</button>
+        <button onClick={() => navigate('/users/100')}>User 100</button>
+      </div>
+    </div>
+  )
+}
+
+function NotFoundPage() {
+  return (
+    <div>
+      <h3>❌ 404 - Page Not Found</h3>
+      <p>The page you're looking for doesn't exist.</p>
+    </div>
+  )
+}
+
+// ============================================
+// LIVE DEMO 2: Nested Routes with Outlet
+// ============================================
+
+import { Outlet } from 'react-router-dom'
+
+function LiveNestedRoutesDemo() {
+  return (
+    <div className="section">
+      <h3>Live Demo: Nested Routes</h3>
+      <p>Dashboard with nested routes using Outlet component.</p>
+      
+      <div className="demo-box" style={{ padding: '1rem', border: '2px solid #646cff' }}>
+        <MemoryRouter initialEntries={['/dashboard']}>
+          <Routes>
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<DashboardHome />} />
+              <Route path="profile" element={<DashboardProfile />} />
+              <Route path="settings" element={<DashboardSettings />} />
+              <Route path="posts" element={<DashboardPosts />} />
+              <Route path="posts/:postId" element={<DashboardPost />} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </div>
+
+      <div className="code-block" style={{ marginTop: '1rem' }}>
+        <h4>Code:</h4>
+        <pre>{`import { Outlet, Link } from 'react-router-dom'
+
+function DashboardLayout() {
+  return (
+    <div>
+      <nav>
+        <Link to="/dashboard">Home</Link>
+        <Link to="/dashboard/profile">Profile</Link>
+        <Link to="/dashboard/settings">Settings</Link>
+      </nav>
+      
+      {/* Child routes render here */}
+      <Outlet />
+    </div>
+  )
+}
+
+// In App.tsx
+<Routes>
+  <Route path="/dashboard" element={<DashboardLayout />}>
+    <Route index element={<DashboardHome />} />
+    <Route path="profile" element={<DashboardProfile />} />
+    <Route path="settings" element={<DashboardSettings />} />
+  </Route>
+</Routes>`}</pre>
+      </div>
+    </div>
+  )
+}
+
+function DashboardLayout() {
+  const location = useLocation()
+  
+  return (
+    <div>
+      <div style={{ 
+        padding: '1rem', 
+        background: '#f5f5f5', 
+        borderRadius: '4px',
+        marginBottom: '1rem',
+        color: '#333'
+      }}>
+        <h3 style={{ margin: '0 0 1rem 0', color: '#333' }}>📊 Dashboard</h3>
+        <nav style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Link to="/dashboard" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/dashboard' ? '#646cff' : '#fff',
+            color: location.pathname === '/dashboard' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Home
+          </Link>
+          <Link to="/dashboard/profile" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/dashboard/profile' ? '#646cff' : '#fff',
+            color: location.pathname === '/dashboard/profile' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Profile
+          </Link>
+          <Link to="/dashboard/settings" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/dashboard/settings' ? '#646cff' : '#fff',
+            color: location.pathname === '/dashboard/settings' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Settings
+          </Link>
+          <Link to="/dashboard/posts" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname.startsWith('/dashboard/posts') ? '#646cff' : '#fff',
+            color: location.pathname.startsWith('/dashboard/posts') ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Posts
+          </Link>
+        </nav>
+      </div>
+
+      <div style={{ padding: '1rem', background: '#1a1a1a', borderRadius: '4px', minHeight: '150px' }}>
+        <div style={{ marginBottom: '0.5rem', color: '#888', fontSize: '0.9rem' }}>
+          Nested Route: <code style={{ color: '#646cff' }}>{location.pathname}</code>
+        </div>
+        <Outlet />
+      </div>
+    </div>
+  )
+}
+
+function DashboardHome() {
+  return (
+    <div>
+      <h4>Dashboard Home</h4>
+      <p>Welcome to your dashboard! Select a section from the navigation above.</p>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: '#2a2a2a', borderRadius: '4px' }}>
+        <h5>Quick Stats</h5>
+        <ul style={{ color: '#aaa' }}>
+          <li>Total Posts: 42</li>
+          <li>Profile Views: 1,234</li>
+          <li>Last Login: Today</li>
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function DashboardProfile() {
+  return (
+    <div>
+      <h4>👤 User Profile</h4>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: '#2a2a2a', borderRadius: '4px' }}>
+        <p><strong>Name:</strong> John Doe</p>
+        <p><strong>Email:</strong> john@example.com</p>
+        <p><strong>Role:</strong> Developer</p>
+        <p><strong>Member Since:</strong> 2024</p>
+      </div>
+    </div>
+  )
+}
+
+function DashboardSettings() {
+  const [theme, setTheme] = useState('dark')
+  const [notifications, setNotifications] = useState(true)
+  
+  return (
+    <div>
+      <h4>⚙️ Settings</h4>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: '#2a2a2a', borderRadius: '4px' }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Theme:</label>
+          <select 
+            value={theme} 
+            onChange={(e) => setTheme(e.target.value)}
+            style={{ padding: '0.5rem', borderRadius: '4px', background: '#1a1a1a', color: '#fff', border: '1px solid #646cff' }}
+          >
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="auto">Auto</option>
+          </select>
+        </div>
+        <div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <input 
+              type="checkbox" 
+              checked={notifications}
+              onChange={(e) => setNotifications(e.target.checked)}
+            />
+            Enable Notifications
+          </label>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DashboardPosts() {
+  const navigate = useNavigate()
+  const posts = [
+    { id: 1, title: 'Getting Started with React Router' },
+    { id: 2, title: 'Understanding Nested Routes' },
+    { id: 3, title: 'Dynamic Route Parameters' },
+  ]
+  
+  return (
+    <div>
+      <h4>📝 Blog Posts</h4>
+      <div style={{ marginTop: '1rem' }}>
+        {posts.map(post => (
+          <div 
+            key={post.id}
+            onClick={() => navigate(`/dashboard/posts/${post.id}`)}
+            style={{ 
+              padding: '1rem', 
+              background: '#2a2a2a', 
+              borderRadius: '4px',
+              marginBottom: '0.5rem',
+              cursor: 'pointer',
+              transition: 'background 0.2s'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#3a3a3a'}
+            onMouseLeave={(e) => e.currentTarget.style.background = '#2a2a2a'}
+          >
+            <strong>{post.title}</strong>
+            <div style={{ color: '#888', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+              Post ID: {post.id}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function DashboardPost() {
+  const { postId } = useParams()
+  const navigate = useNavigate()
+  
+  return (
+    <div>
+      <button 
+        onClick={() => navigate('/dashboard/posts')}
+        style={{ marginBottom: '1rem' }}
+      >
+        ← Back to Posts
+      </button>
+      <h4>📄 Post Details</h4>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: '#2a2a2a', borderRadius: '4px' }}>
+        <p><strong>Post ID:</strong> {postId}</p>
+        <p style={{ marginTop: '1rem', color: '#aaa' }}>
+          This is the content for post {postId}. Notice how the URL parameter
+          changes when you navigate between different posts!
+        </p>
+      </div>
+    </div>
+  )
+}
+
+// ============================================
+// LIVE DEMO 3: Protected Routes & Auth
+// ============================================
+
+import { createContext, useContext, ReactNode } from 'react'
+
+interface AuthContextType {
+  user: string | null
+  login: (username: string) => void
+  logout: () => void
+}
+
+const AuthContext = createContext<AuthContextType | null>(null)
+
+function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) throw new Error('useAuth must be used within AuthProvider')
+  return context
+}
+
+function LiveProtectedRoutesDemo() {
+  return (
+    <div className="section">
+      <h3>Live Demo: Protected Routes & Authentication</h3>
+      <p>Login to access protected routes. Try navigating without logging in!</p>
+      
+      <div className="demo-box" style={{ padding: '1rem', border: '2px solid #646cff' }}>
+        <MemoryRouter initialEntries={['/']}>
+          <AuthProviderDemo>
+            <ProtectedRoutesApp />
+          </AuthProviderDemo>
+        </MemoryRouter>
+      </div>
+
+      <div className="code-block" style={{ marginTop: '1rem' }}>
+        <h4>Code:</h4>
+        <pre>{`import { Navigate } from 'react-router-dom'
+
+// Protected Route Component
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { user } = useAuth()
+  
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
+  
+  return children
+}
+
+// Usage in Routes
+<Routes>
+  <Route path="/login" element={<Login />} />
+  <Route 
+    path="/admin" 
+    element={
+      <ProtectedRoute>
+        <AdminPanel />
+      </ProtectedRoute>
+    } 
+  />
+</Routes>`}</pre>
+      </div>
+    </div>
+  )
+}
+
+function AuthProviderDemo({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<string | null>(null)
+  
+  const login = (username: string) => setUser(username)
+  const logout = () => setUser(null)
+  
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+function ProtectedRoutesApp() {
+  const location = useLocation()
+  const { user } = useAuth()
+  
+  return (
+    <div>
+      <div style={{ 
+        padding: '1rem', 
+        background: '#f5f5f5', 
+        borderRadius: '4px',
+        marginBottom: '1rem',
+        color: '#333'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h3 style={{ margin: 0, color: '#333' }}>🔐 Protected Routes Demo</h3>
+          {user && (
+            <div style={{ fontSize: '0.9rem', color: '#333' }}>
+              Logged in as: <strong>{user}</strong>
+            </div>
+          )}
+        </div>
+        <nav style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Link to="/" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/' ? '#646cff' : '#fff',
+            color: location.pathname === '/' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Home
+          </Link>
+          <Link to="/login" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/login' ? '#646cff' : '#fff',
+            color: location.pathname === '/login' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Login
+          </Link>
+          <Link to="/admin" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/admin' ? '#646cff' : '#fff',
+            color: location.pathname === '/admin' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Admin (Protected)
+          </Link>
+          <Link to="/profile" style={{ 
+            padding: '0.5rem 1rem',
+            background: location.pathname === '/profile' ? '#646cff' : '#fff',
+            color: location.pathname === '/profile' ? '#fff' : '#646cff',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            border: '1px solid #646cff',
+            fontSize: '0.9rem'
+          }}>
+            Profile (Protected)
+          </Link>
+        </nav>
+      </div>
+
+      <div style={{ padding: '1rem', background: '#1a1a1a', borderRadius: '4px', minHeight: '200px' }}>
+        <div style={{ marginBottom: '0.5rem', color: '#888', fontSize: '0.9rem' }}>
+          Current Path: <code style={{ color: '#646cff' }}>{location.pathname}</code>
+        </div>
+        
+        <Routes>
+          <Route path="/" element={<PublicHome />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </div>
+    </div>
+  )
+}
+
+function ProtectedRoute({ children }: { children: JSX.Element }) {
+  const { user } = useAuth()
+  const location = useLocation()
+  
+  if (!user) {
+    return (
+      <div>
+        <h4>🔒 Access Denied</h4>
+        <p>You must be logged in to view this page.</p>
+        <Link to="/login" state={{ from: location.pathname }} style={{
+          display: 'inline-block',
+          marginTop: '1rem',
+          padding: '0.5rem 1rem',
+          background: '#646cff',
+          color: '#fff',
+          textDecoration: 'none',
+          borderRadius: '4px'
+        }}>
+          Go to Login
+        </Link>
+      </div>
+    )
+  }
+  
+  return children
+}
+
+function PublicHome() {
+  const { user } = useAuth()
+  
+  return (
+    <div>
+      <h4>🏠 Public Home Page</h4>
+      <p>This page is accessible to everyone!</p>
+      {user ? (
+        <p style={{ color: '#4ade80', marginTop: '1rem' }}>
+          ✓ You are logged in as <strong>{user}</strong>
+        </p>
+      ) : (
+        <p style={{ color: '#fbbf24', marginTop: '1rem' }}>
+          ⚠️ You are not logged in. Try accessing protected routes!
+        </p>
+      )}
+    </div>
+  )
+}
+
+function LoginPage() {
+  const { login, user } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [username, setUsername] = useState('')
+  
+  const from = (location.state as any)?.from || '/admin'
+  
+  if (user) {
+    return (
+      <div>
+        <h4>✅ Already Logged In</h4>
+        <p>You are logged in as <strong>{user}</strong></p>
+        <button onClick={() => navigate(from)}>
+          Continue to {from}
+        </button>
+      </div>
+    )
+  }
+  
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (username.trim()) {
+      login(username.trim())
+      navigate(from, { replace: true })
+    }
+  }
+  
+  return (
+    <div>
+      <h4>🔐 Login Page</h4>
+      <form onSubmit={handleLogin} style={{ marginTop: '1rem' }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter username"
+            style={{
+              padding: '0.5rem',
+              width: '100%',
+              maxWidth: '300px',
+              borderRadius: '4px',
+              border: '1px solid #646cff',
+              background: '#1a1a1a',
+              color: '#fff'
+            }}
+          />
+        </div>
+        <button type="submit" disabled={!username.trim()}>
+          Login
+        </button>
+      </form>
+      <p style={{ marginTop: '1rem', color: '#888', fontSize: '0.9rem' }}>
+        Tip: Enter any username to login
+      </p>
+    </div>
+  )
+}
+
+function AdminPage() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
+  }
+  
+  return (
+    <div>
+      <h4>⚙️ Admin Panel</h4>
+      <p>Welcome to the admin panel, <strong>{user}</strong>!</p>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: '#2a2a2a', borderRadius: '4px' }}>
+        <h5>Admin Tools</h5>
+        <ul style={{ color: '#aaa' }}>
+          <li>User Management</li>
+          <li>System Settings</li>
+          <li>Analytics Dashboard</li>
+          <li>Content Moderation</li>
+        </ul>
+      </div>
+      <button onClick={handleLogout} style={{ marginTop: '1rem' }}>
+        Logout
+      </button>
+    </div>
+  )
+}
+
+function ProfilePage() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+  
+  return (
+    <div>
+      <h4>👤 User Profile</h4>
+      <div style={{ marginTop: '1rem', padding: '1rem', background: '#2a2a2a', borderRadius: '4px' }}>
+        <p><strong>Username:</strong> {user}</p>
+        <p><strong>Email:</strong> {user}@example.com</p>
+        <p><strong>Role:</strong> User</p>
+        <p><strong>Status:</strong> <span style={{ color: '#4ade80' }}>Active</span></p>
+      </div>
+      <button onClick={handleLogout} style={{ marginTop: '1rem' }}>
+        Logout
+      </button>
     </div>
   )
 }
