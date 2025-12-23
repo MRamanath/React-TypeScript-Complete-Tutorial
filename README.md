@@ -68,7 +68,7 @@ Each chapter includes:
 
 1. **Clone or navigate to the project directory:**
    ```bash
-   cd /Users/a3097641/Desktop/react-js
+   cd /Users/MRamanath/Desktop/react-js
    ```
 
 2. **Install dependencies:**
